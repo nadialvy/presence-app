@@ -20,14 +20,14 @@ class LoginController extends GetxController {
         print(userCredential);
 
         if(userCredential.user != null){
-          if(userCredential.user!.emailVerified == true){
+          // if(userCredential.user!.emailVerified == true){
             Get.offAllNamed(Routes.HOME);
-          }else {
-            Get.defaultDialog(
-              title: "Belum Terverifikasi",
-              middleText: "Anda belum terverifikasi. Lakukan verifikasi di email yang terdaftar"
-            );
-          }
+          // }else {
+          //   Get.defaultDialog(
+          //     title: "Belum Terverifikasi",
+          //     middleText: "Anda belum terverifikasi. Lakukan verifikasi di email yang terdaftar"
+          //   );
+          // }
         }
 
       } on FirebaseAuthException catch(e){
