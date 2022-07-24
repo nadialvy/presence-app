@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:presence_app/app/constant/colors.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/home_controller.dart';
@@ -12,7 +13,13 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('HomeView'),
+        backgroundColor: mainRed,
+        title: Text(
+          'Siakad',
+          style: TextStyle(
+            color: Colors.white
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(

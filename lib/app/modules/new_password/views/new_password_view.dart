@@ -5,59 +5,37 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:presence_app/app/constant/colors.dart';
 
-import '../controllers/login_controller.dart';
+import '../controllers/new_password_controller.dart';
 
-
-class LoginView extends GetView<LoginController> {
+class NewPasswordView extends GetView<NewPasswordController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(20),
         children: [
           SizedBox(
             height: Get.height,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: Get.width,
-                  height: Get.height * 0.25,
-                  child: Image.asset('assets/images/logo.png'),
-                ),
-                SizedBox(height: 20,),
-                TextField(
-                  autocorrect: false,
-                  controller: controller.emailC,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Email"
-                  ),
-                ),
-                SizedBox(height: 20,),
-                TextField(
-                  autocorrect: false,
-                  controller: controller.passC,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Password"
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: (){},
-                    child: Text(
-                      'Lupa password ?',
-                      style: TextStyle(
-                        color: mainRed
-                      ),
-                    )
+                Text(
+                  'Anda harus mengubah password anda terlebih dahulu!',
+                  style: TextStyle(
+                    color: mainRed
                   ),
                 ),
                 SizedBox(height: 10,),
+                TextField(
+                  controller: controller.newPassC,
+                  obscureText: true,
+                  autocorrect: false,
+                  decoration: InputDecoration(
+                    labelText: 'New Password',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 20,),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -66,10 +44,10 @@ class LoginView extends GetView<LoginController> {
                       padding: const EdgeInsets.symmetric(vertical: 20)
                     ),
                     onPressed: () { 
-                      controller.login();
+                      controller.newPassword();
                     },
                     child: Text(
-                      'Login',
+                      'Ganti Password',
                       style: TextStyle(
                         fontSize: 17
                       ),
@@ -79,7 +57,6 @@ class LoginView extends GetView<LoginController> {
               ],
             ),
           ),
-          
         ],
       ),
     );
