@@ -18,7 +18,7 @@ class LoginController extends GetxController {
             email: emailC.text,
             password: passC.text
           );
-        print(userCredential);
+        // print(userCredential);
 
         if(userCredential.user != null){
           if(userCredential.user!.emailVerified == true){

@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -14,11 +17,26 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Application",
-      initialRoute: Routes.LOGIN,
-      getPages: AppPages.routes,
+    StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: CircularProgressIndicator()
+              )
+            )
+          );
+        }
+        print('Current User = ${snapshot.data}');
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Application",
+          initialRoute: snapshot.data != null ? Routes.HOME : Routes.LOGIN,
+          getPages: AppPages.routes,
+        );
+      }
     ),
   );
 }
