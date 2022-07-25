@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/constant/colors.dart';
+import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
+  const ProfileView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,19 +47,22 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         const SizedBox(height: 20,),
                         Text(
-                          "${user['name'].toString().toUpperCase()}",
+                          user['name'].toString().toUpperCase(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600
                           ),
                         ),
                         ListTile(
-                          onTap: (){},
+                          onTap: () => Get.toNamed(
+                            Routes.UPDATE_PROFILE,
+                            arguments: user // passing data
+                          ),
                           leading: const Icon(Icons.person),
                           title: const Text("Update Profile"),
                         ),
                         ListTile(
-                          onTap: (){},
+                          onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
                           leading: const Icon(Icons.key),
                           title: const Text("Update Password"),
                         ),
@@ -67,7 +73,7 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         if(user["role"] == "admin")
                           ListTile(
-                            onTap: (){},
+                            onTap: () => Get.toNamed(Routes.ADD_PEGAWAI),
                             leading: const Icon(Icons.person_add),
                             title: const Text("Add Pegawai"),
                           ),
