@@ -19,16 +19,13 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: mainRed,
         title: Text(
           'Siakad',
-          style: TextStyle(
-            color: Colors.white
-          ),
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
-            icon: Icon(Icons.person_add)
-          )
+              onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
+              icon: Icon(Icons.person_add))
         ],
       ),
       body: Center(
@@ -37,14 +34,20 @@ class HomeView extends GetView<HomeController> {
           style: TextStyle(fontSize: 20),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: mainRed,
-        onPressed: () async {
-          await FirebaseAuth.instance.signOut();
-          Get.offAllNamed(Routes.LOGIN);
-        },
-        child: Icon(Icons.logout),
-      ),
+      floatingActionButton: Obx(() => FloatingActionButton(
+            backgroundColor: mainRed,
+            onPressed: () async {
+              if (controller.isLoading.isFalse) {
+                controller.isLoading.value = true;
+                await FirebaseAuth.instance.signOut();
+                Get.offAllNamed(Routes.LOGIN);
+                controller.isLoading.value = false;
+              }
+            },
+            child: controller.isLoading.isFalse
+                ? Icon(Icons.logout)
+                : CircularProgressIndicator(),
+          )),
     );
   }
 }

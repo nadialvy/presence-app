@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 class NewPasswordController extends GetxController {
+  RxBool isLoading = false.obs;
   TextEditingController newPassC = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
 

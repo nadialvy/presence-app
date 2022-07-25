@@ -21,11 +21,11 @@ class NewPasswordView extends GetView<NewPasswordController> {
               children: [
                 Text(
                   'Anda harus mengubah password anda terlebih dahulu!',
-                  style: TextStyle(
-                    color: mainRed
-                  ),
+                  style: TextStyle(color: mainRed),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 TextField(
                   controller: controller.newPassC,
                   obscureText: true,
@@ -35,24 +35,24 @@ class NewPasswordView extends GetView<NewPasswordController> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: mainRed,
-                      padding: const EdgeInsets.symmetric(vertical: 20)
-                    ),
-                    onPressed: () { 
-                      controller.newPassword();
-                    },
-                    child: Text(
-                      'Ganti Password',
-                      style: TextStyle(
-                        fontSize: 17
-                      ),
-                    )
-                  ),
+                  child: Obx(() => ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: mainRed,
+                          padding: const EdgeInsets.symmetric(vertical: 20)),
+                      onPressed: () {
+                        controller.newPassword();
+                      },
+                      child: Text(
+                        controller.isLoading.isFalse
+                            ? 'Ubah Password'
+                            : 'Loading...',
+                        style: TextStyle(fontSize: 17),
+                      ))),
                 ),
               ],
             ),

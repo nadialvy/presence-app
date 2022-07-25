@@ -7,7 +7,6 @@ import 'package:presence_app/app/constant/colors.dart';
 
 import '../controllers/login_controller.dart';
 
-
 class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
@@ -25,61 +24,61 @@ class LoginView extends GetView<LoginController> {
                   height: Get.height * 0.25,
                   child: Image.asset('assets/images/logo.png'),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 TextField(
                   autocorrect: false,
                   controller: controller.emailC,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Email"
-                  ),
+                      border: OutlineInputBorder(), labelText: "Email"),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 TextField(
                   autocorrect: false,
                   controller: controller.passC,
                   obscureText: true,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Password"
-                  ),
+                      border: OutlineInputBorder(), labelText: "Password"),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: (){},
-                    child: Text(
-                      'Lupa password ?',
-                      style: TextStyle(
-                        color: mainRed
-                      ),
-                    )
-                  ),
+                      onPressed: () {},
+                      child: Text(
+                        'Lupa password ?',
+                        style: TextStyle(color: mainRed),
+                      )),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: mainRed,
-                      padding: const EdgeInsets.symmetric(vertical: 20)
-                    ),
-                    onPressed: () { 
-                      controller.login();
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 17
-                      ),
-                    )
-                  ),
+                  child: Obx(() => 
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: mainRed,
+                          padding: const EdgeInsets.symmetric(vertical: 20)),
+                      onPressed: () async {
+                        if (controller.isLoading.isFalse) {
+                          await controller.login();
+                        }
+                      },
+                      child: Text(
+                        controller.isLoading.isFalse ? 'Login' : 'Loading...',
+                        style: TextStyle(fontSize: 17),
+                      )
+                  )),
                 ),
               ],
             ),
           ),
-          
         ],
       ),
     );

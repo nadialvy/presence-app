@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:presence_app/app/constant/colors.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/add_pegawai_controller.dart';
@@ -12,14 +13,12 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Pegawai'),
+        backgroundColor: mainRed,
+        title: const Text('Add Pegawai'),
         centerTitle: true,
-        leading: (
-          IconButton(
+        leading: (IconButton(
             onPressed: () => Get.toNamed(Routes.HOME),
-            icon: Icon(Icons.arrow_back_ios)
-          )
-        ),
+            icon: const Icon(Icons.arrow_back_ios))),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -27,35 +26,42 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
           TextField(
             autocorrect: false,
             controller: controller.nipC,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "NIP"
-            ),
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), labelText: "NIP"),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           TextField(
             autocorrect: false,
             controller: controller.nameC,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Name"
-            ),
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), labelText: "Name"),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           TextField(
             autocorrect: false,
             controller: controller.emailC,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Email"
-            ),
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), labelText: "Email"),
           ),
-          SizedBox(height: 30,),
-          ElevatedButton(
-            onPressed: (){
-              controller.addPegawai();
-            },
-            child: Text('Add Pegawai')
+          const SizedBox(
+            height: 30,
+          ),
+          Obx(() => ElevatedButton(
+              onPressed: () async {
+                if (controller.isLoading.isFalse) {
+                  await controller.addPegawai();
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(mainRed),
+              ),
+              child: Text(
+                  controller.isLoading.isFalse ? 'Add Pegawai' : 'Loading...')
+            )
           )
         ],
       ),
