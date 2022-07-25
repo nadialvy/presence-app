@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:presence_app/app/constant/colors.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -31,6 +32,10 @@ void main() async {
         }
         print('Current User = ${snapshot.data}');
         return GetMaterialApp(
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            primaryColor: mainRed,
+          ),
           debugShowCheckedModeBanner: false,
           title: "Application",
           initialRoute: snapshot.data != null ? Routes.HOME : Routes.LOGIN,

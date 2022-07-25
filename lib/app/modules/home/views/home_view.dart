@@ -24,26 +24,30 @@ class HomeView extends GetView<HomeController> {
         ),
         centerTitle: true,
         actions: [
-          StreamBuilder <DocumentSnapshot<Map<String, dynamic>>>(
-            stream: controller.streamRole(),
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return SizedBox();
-              }
-              //ambil role
-              String role = snapshot.data!.data()!["role"];
-              if(role == "admin"){
-                // admin
-                return IconButton(
-                  onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
-                  icon: Icon(Icons.person_add)
-                );
-              }else {
-                // pegawia
-                return SizedBox();
-              }
-            }
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.PROFILE),
+            icon: Icon(Icons.person)
           )
+          // StreamBuilder <DocumentSnapshot<Map<String, dynamic>>>(
+          //   stream: controller.streamRole(),
+          //   builder: (context, snapshot) {
+          //     if(snapshot.connectionState == ConnectionState.waiting){
+          //       return SizedBox();
+          //     }
+          //     //ambil role
+          //     String role = snapshot.data!.data()!["role"];
+          //     if(role == "admin"){
+          //       // admin
+          //       return IconButton(
+          //         onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
+          //         icon: Icon(Icons.person_add)
+          //       );
+          //     }else {
+          //       // pegawia
+          //       return SizedBox();
+          //     }
+          //   }
+          // )
         ],
       ),
       body: Center(
@@ -65,7 +69,8 @@ class HomeView extends GetView<HomeController> {
             child: controller.isLoading.isFalse
                 ? Icon(Icons.logout)
                 : CircularProgressIndicator(),
-          )),
+          )
+      ),
     );
   }
 }
