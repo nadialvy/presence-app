@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +24,26 @@ class HomeView extends GetView<HomeController> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-              onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
-              icon: Icon(Icons.person_add))
+          StreamBuilder <DocumentSnapshot<Map<String, dynamic>>>(
+            stream: controller.streamRole(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return SizedBox();
+              }
+              //ambil role
+              String role = snapshot.data!.data()!["role"];
+              if(role == "admin"){
+                // admin
+                return IconButton(
+                  onPressed: () => Get.toNamed(Routes.ADD_PEGAWAI),
+                  icon: Icon(Icons.person_add)
+                );
+              }else {
+                // pegawia
+                return SizedBox();
+              }
+            }
+          )
         ],
       ),
       body: Center(

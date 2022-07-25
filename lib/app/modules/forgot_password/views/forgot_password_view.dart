@@ -25,12 +25,12 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                 TextField(
                   autocorrect: false,
                   controller: controller.emailC,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 SizedBox(
                   width: double.infinity,
                   child: Obx(() => 
@@ -45,7 +45,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                       },
                       child: Text(
                         controller.isLoading.isFalse ? 'Send Reset Password' : 'Loading...',
-                        style: TextStyle(fontSize: 17),
+                        style: const TextStyle(fontSize: 17),
                       )
                   )),
                 ),
