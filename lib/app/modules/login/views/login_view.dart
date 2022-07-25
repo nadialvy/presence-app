@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/constant/colors.dart';
+import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -49,7 +50,9 @@ class LoginView extends GetView<LoginController> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.toNamed(Routes.FORGOT_PASSWORD);
+                      },
                       child: Text(
                         'Lupa password ?',
                         style: TextStyle(color: mainRed),
