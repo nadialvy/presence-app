@@ -14,6 +14,7 @@ dependencies:
   firebase_storage: 10.3.3
   image_picker: 0.8.5+3
   convex_bottom_bar: 3.0.0
+  intl: 0.17.0
   flutter: 
     sdk: flutter
 
@@ -23,7 +24,6 @@ dev_dependencies:
     sdk: flutter
 
 flutter: 
-  uses-material-design: true
   assets: 
     - assets/images/
   fonts: 
@@ -33,4 +33,5 @@ flutter:
         - asset: fonts/Poppins/Poppins-Medium.ttf
         - asset: fonts/Poppins/Poppins-Regular.ttf
         - asset: fonts/Poppins/Poppins-Thin.ttf
+  uses-material-design: true
 
