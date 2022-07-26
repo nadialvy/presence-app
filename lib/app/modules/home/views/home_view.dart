@@ -28,153 +28,172 @@ class HomeView extends GetView<HomeController> {
         ),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Row(
+      body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: controller.streamUser(),
+        builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          Map<String, dynamic>? user = snapshot.data!.data();
+          print("USERR ======  ${user!['name']}");
+
+          return ListView(
+            padding: const EdgeInsets.all(20),
             children: [
-              ClipOval(
-                child: Container(
-                  width: 70,
-                  height: 70,
-                  color: Colors.grey[300],
-                  child: Center(child: Text('X')),
-                ),
-              ),
-              SizedBox(width: 20,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Selamat datang!',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
+              Row(
+                children: [
+                  ClipOval(
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      color: Colors.grey[300],
+                      child: Image.network(
+                        user['photo'] != null && user['photo'] != ""
+                        ? user['photo']
+                        : "https://ui-avatars.com/api/?name=${user['name']}",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                  Text('Jl. Raya Danau Kelinci')
+                  SizedBox(width: 20,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Selamat datang!',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Text('Lokasi belum terdeteksi')
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
-          SizedBox(height: 20,),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.grey[200],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Admin',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-                SizedBox(height: 10,),
-                Text('1213165615'),
-                Text('January Dahlah'),
-              ],
-            ),
-          ),
-          SizedBox(height: 20,),
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.grey[200],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    Text('Masuk'),
-                    Text('-'),
-                  ]
-                ),
-                Container(
-                  width: 2,
-                  height: 40,
-                  color: darkGrey,
-                ),
-                Column(
-                  children: [
-                    Text('Keluar'),
-                    Text('-'),
-                  ]
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20,),
-          Divider(
-            color: darkGrey,
-            thickness: 1,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Last 5 days'
-              ),
-              TextButton(
-                onPressed: (){},
-                child: Text('See more')
-              ),
-            ],
-          ),
-          SizedBox(height: 10,),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 10),
+              SizedBox(height: 20,),
+              Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(15),
                   color: Colors.grey[200],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Masuk',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        Text(
-                          '${DateFormat.yMMMEd().format(DateTime.now())}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text('${DateFormat.jms().format(DateTime.now())}'),
-                    SizedBox(height: 10,),
                     Text(
-                      'Keluar',
+                      "${user['job']}",
                       style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold
                       ),
                     ),
-                    Text('${DateFormat.jms().format(DateTime.now())}'),
+                    SizedBox(height: 10,),
+                    Text("${user['nip']}"),
+                    Text("${user['name']}"),
                   ],
                 ),
-              );
-            },
-          )
-        ],
+              ),
+              SizedBox(height: 20,),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey[200],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Text('Masuk'),
+                        Text('-'),
+                      ]
+                    ),
+                    Container(
+                      width: 2,
+                      height: 40,
+                      color: darkGrey,
+                    ),
+                    Column(
+                      children: [
+                        Text('Keluar'),
+                        Text('-'),
+                      ]
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Divider(
+                color: darkGrey,
+                thickness: 1,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Last 5 days'
+                  ),
+                  TextButton(
+                    onPressed: (){},
+                    child: Text('See more')
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.grey[200],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Masuk',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Text(
+                              '${DateFormat.yMMMEd().format(DateTime.now())}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text('${DateFormat.jms().format(DateTime.now())}'),
+                        SizedBox(height: 10,),
+                        Text(
+                          'Keluar',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        Text('${DateFormat.jms().format(DateTime.now())}'),
+                      ],
+                    ),
+                  );
+                },
+              )
+            ],
+          );
+        }
       ),
       bottomNavigationBar: ConvexAppBar(
         style: TabStyle.fixedCircle,
