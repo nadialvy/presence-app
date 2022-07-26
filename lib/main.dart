@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/constant/colors.dart';
+import 'package:presence_app/app/controllers/page_index_controller.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -17,6 +18,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final pageC = Get.put(PageIndexController(), permanent: true);
+
   runApp(
     StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
