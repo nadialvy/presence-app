@@ -37,6 +37,7 @@ class UpdateProfileController extends GetxController {
         Map<String, dynamic> data = {
           "name" : nameC.text,
         };
+
         if(image != null){          
           File file = File(image!.path);
           String extensionImage = image!.name.split(".").last;
@@ -48,6 +49,8 @@ class UpdateProfileController extends GetxController {
         }
 
         await firestore.collection("pegawai").doc(uid).update(data);
+        
+        image = null;
 
         Get.back();
         Get.snackbar("Sukses", "Berhasil update profile");
@@ -59,6 +62,24 @@ class UpdateProfileController extends GetxController {
       }
     }else {
       Get.snackbar("Terjadi Kesalahan", "Anda harus mengisi semua data");
+    }
+  }
+
+  void deleteImage(String uid) async{
+    try{
+      await firestore.collection("pegawai").doc(uid).update({
+        "photo" : FieldValue.delete(),
+      });
+      update();
+      Get.back();
+      Get.snackbar(
+        "Sukses",
+        "Berhasil menghapus profile",
+      );
+    }catch (e){
+      Get.snackbar("Terjadi Kesalahan", "Tidak dapat menghapus profile");
+    }finally{
+      update();
     }
   }
 

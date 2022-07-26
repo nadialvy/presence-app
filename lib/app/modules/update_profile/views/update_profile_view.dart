@@ -25,6 +25,70 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          Column(
+            children: [
+              GetBuilder<UpdateProfileController>(
+                builder: (c){
+                  if(c.image != null){
+                    return ClipOval(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.file(
+                          File(c.image!.path),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }else {
+                    if(user["photo"] != null && user["photo"] != ""){
+                      return ClipOval(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: Image.network(
+                            user["photo"],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Text('No Image choosen');
+                    }
+                  }
+                },
+              ),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  OutlinedButton(
+                    onPressed: (){
+                      controller.pickImage();
+                    },
+                    child: const Text(
+                      'Choose photo',
+                      style: TextStyle(
+                        color: mainRed
+                      ),
+                    )
+                  ),
+                  OutlinedButton(
+                    onPressed: (){
+                      controller.deleteImage(user["uid"]);
+                    },
+                    child: const Text(
+                      'Remove photo',
+                      style: TextStyle(
+                        color: mainRed
+                      ),
+                    )
+                  ),
+                ],
+              )
+            ],
+          ),
+          SizedBox(height: 30,),
           TextField(
             readOnly: true,
             autocorrect: false,
@@ -53,58 +117,6 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
           ),
           const SizedBox(
             height: 30,
-          ),
-          const Text(
-            'Profile Picture',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GetBuilder<UpdateProfileController>(
-                builder: (c){
-                  if(c.image != null){
-                    return ClipOval(
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        child: Image.file(
-                          File(c.image!.path),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  }else {
-                    if(user["photo"] != null && user["photo"] != ""){
-                      return ClipOval(
-                        child: Container(
-                          height: 100,
-                          width: 100,
-                          child: Image.network(user["photo"]),
-                        ),
-                      );
-                    } else {
-                      return Text('No Image choosen');
-                    }
-                  }
-                },
-              ),
-              OutlinedButton(
-                onPressed: (){
-                  controller.pickImage();
-                },
-                child: const Text('Choose file')
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 20,
           ),
           Obx(() => ElevatedButton(
               onPressed: () async {
