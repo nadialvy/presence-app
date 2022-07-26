@@ -29,7 +29,7 @@ class ProfileView extends GetView<ProfileController> {
                 stream: controller.streamUser(),
                 builder: (context, snapshot) {
                   if(snapshot.connectionState == ConnectionState.waiting){
-                    const Center(child: CircularProgressIndicator(),);
+                    return const Center(child: CircularProgressIndicator(),);
                   }
                   if(snapshot.hasData){
                     Map<String, dynamic> user = snapshot.data!.data()!;
