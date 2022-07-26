@@ -74,11 +74,14 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                       child: Container(
                         height: 100,
                         width: 100,
-                        child: Image.file(File(c.image!.path), fit: BoxFit.cover,),
+                        child: Image.file(
+                          File(c.image!.path),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     );
                   }else {
-                    if(user["photo"] != null){
+                    if(user["photo"] != null && user["photo"] != ""){
                       return ClipOval(
                         child: Container(
                           height: 100,
