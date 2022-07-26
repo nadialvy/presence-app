@@ -33,6 +33,7 @@ class ProfileView extends GetView<ProfileController> {
                   }
                   if(snapshot.hasData){
                     Map<String, dynamic> user = snapshot.data!.data()!;
+                    // print(user);
                     return Column(
                       children: [
                         ClipOval(
@@ -40,7 +41,9 @@ class ProfileView extends GetView<ProfileController> {
                             width: 100,
                             height: 100,
                             child: Image.network(
-                              "https://ui-avatars.com/api/?name=${user['name']}",
+                              user["photo"] != null && user["photo"] != ""
+                              ? user["photo"]
+                              : "https://ui-avatars.com/api/?name=${user['name']}",
                               fit: BoxFit.cover,
                             ),
                           ),

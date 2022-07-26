@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,7 +12,7 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
   
   @override
   Widget build(BuildContext context) {
-  print(user);
+  // print(user);
     controller.nipC.text = user['nip'];
     controller.nameC.text = user['name'];
     controller.emailC.text = user['email'];
@@ -51,6 +53,55 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
           ),
           const SizedBox(
             height: 30,
+          ),
+          const Text(
+            'Profile Picture',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GetBuilder<UpdateProfileController>(
+                builder: (c){
+                  if(c.image != null){
+                    return ClipOval(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.file(File(c.image!.path), fit: BoxFit.cover,),
+                      ),
+                    );
+                  }else {
+                    if(user["photo"] != null){
+                      return ClipOval(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: Image.network(user["photo"]),
+                        ),
+                      );
+                    } else {
+                      return Text('No Image choosen');
+                    }
+                  }
+                },
+              ),
+              OutlinedButton(
+                onPressed: (){
+                  controller.pickImage();
+                },
+                child: const Text('Choose file')
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 20,
           ),
           Obx(() => ElevatedButton(
               onPressed: () async {
