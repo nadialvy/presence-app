@@ -35,7 +35,6 @@ class PageIndexController extends GetxController {
           //presensi
           await presensi(position, address);
 
-          Get.snackbar("Berhasil", "Absensi anda sudah disimpan");
         }else {
           Get.snackbar("Terjadi Kesalahan", "${resp['message']}");
         } 
@@ -49,9 +48,9 @@ class PageIndexController extends GetxController {
   }
 
   Future<void> presensi(Position position, String address) async{
-    String uid = await auth.currentUser!.uid;
+    String uid = auth.currentUser!.uid;
 
-    CollectionReference<Map<String, dynamic>> colPresence = await firestore.collection("pegawai").doc(uid).collection("presence");
+    CollectionReference<Map<String, dynamic>> colPresence = firestore.collection("pegawai").doc(uid).collection("presence");
   
     QuerySnapshot<Map<String, dynamic>> snapPresence = await colPresence.get();
 
@@ -59,8 +58,8 @@ class PageIndexController extends GetxController {
     String todayDocID = DateFormat.yMd().format(now).replaceAll('/', '-');
     // print(todayDocID);
 
-    if(snapPresence.docs.length == 0){
-      //belum pernah absen & set absen masuk
+    if(snapPresence.docs.isEmpty){
+      // ABSEN MASUK PERTAMA KALI
       await colPresence.doc(todayDocID).set({
         "date" : now.toIso8601String(),
         "masuk" : {
@@ -72,10 +71,55 @@ class PageIndexController extends GetxController {
         }
       });
 
+      Get.snackbar("Sukses", "Absen masuk anda sudah disimpan");
+
     } else {
-      //udah pernah absen
-      //cek hari ini udah absen masuk keluar blm?
-      print('Masuk else');
+      //UDAH PERNAH ABSEN SEBELUMNYA
+
+      DocumentSnapshot<Map<String, dynamic>> todayDoc = await colPresence.doc(todayDocID).get();
+      print(todayDoc.exists);
+
+      if(todayDoc.exists == true){
+        //ABSEN KELUAR ATAU UDAH 2 2 NYA
+        Map<String, dynamic>? todayPresenceData = todayDoc.data();
+
+        if(todayPresenceData!["keluar"] != null){
+          //UDAH 2 2NYA
+          Get.snackbar("Tidak dapat absen", "Anda sudah masuk absen dan keluar. Anda tidak dapat absen lagi untuk hari ini");
+        } else {
+          // ABSEN KELUAR
+          print('ABSEN KELUARRR');
+          await colPresence.doc(todayDocID).update({
+            "keluar" : {
+              "date" : now.toIso8601String(),
+              "lat" : position.latitude,
+              "long" : position.longitude,
+              "address" : address,
+              "status" : "Di dalam area"
+            }
+          });
+
+          Get.snackbar("Sukses", "Absen keluar anda sudah disimpan");
+        }
+
+      }else {
+        // ABSEN MASUK YANG KE2 KALI DST
+        print('dijalanlka');
+        
+        await colPresence.doc(todayDocID).set({
+          "date" : now.toIso8601String(),
+          "masuk" : {
+            "date" : now.toIso8601String(),
+            "lat" : position.latitude,
+            "long" : position.longitude,
+            "address" : address,
+            "status" : "Di dalam area"
+          }
+        });
+
+      Get.snackbar("Sukses", "Absen masuk anda sudah disimpan");
+      }
+
     }
 
 
