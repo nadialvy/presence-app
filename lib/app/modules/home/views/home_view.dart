@@ -139,7 +139,7 @@ class HomeView extends GetView<HomeController> {
                     'Last 5 days'
                   ),
                   TextButton(
-                    onPressed: (){},
+                    onPressed: () => Get.toNamed(Routes.ALL_PRESENSI),
                     child: Text('See more')
                   ),
                 ],
@@ -150,43 +150,52 @@ class HomeView extends GetView<HomeController> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Material(
                       color: Colors.grey[200],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Masuk',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Masuk',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  Text(
+                                    '${DateFormat.yMMMEd().format(DateTime.now())}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              '${DateFormat.yMMMEd().format(DateTime.now())}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
+                              Text('${DateFormat.jms().format(DateTime.now())}'),
+                              SizedBox(height: 10,),
+                              Text(
+                                'Keluar',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Text('${DateFormat.jms().format(DateTime.now())}'),
-                        SizedBox(height: 10,),
-                        Text(
-                          'Keluar',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
+                              Text('${DateFormat.jms().format(DateTime.now())}'),
+                            ],
                           ),
                         ),
-                        Text('${DateFormat.jms().format(DateTime.now())}'),
-                      ],
+                      ),
                     ),
                   );
                 },
