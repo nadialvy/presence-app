@@ -16,6 +16,7 @@ dependencies:
   convex_bottom_bar: 3.0.0
   intl: 0.17.0
   geolocator: 9.0.1
+  geocoding: 2.0.4
   flutter: 
     sdk: flutter
 
@@ -25,6 +26,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter: 
+  uses-material-design: true
   assets: 
     - assets/images/
   fonts: 
@@ -34,5 +36,4 @@ flutter:
         - asset: fonts/Poppins/Poppins-Medium.ttf
         - asset: fonts/Poppins/Poppins-Regular.ttf
         - asset: fonts/Poppins/Poppins-Thin.ttf
-  uses-material-design: true
 

@@ -38,7 +38,7 @@ class HomeView extends GetView<HomeController> {
           }
 
           Map<String, dynamic>? user = snapshot.data!.data();
-          print("USERR ======  ${user!['name']}");
+          // print("${user!['name']}");
 
           return ListView(
             padding: const EdgeInsets.all(20),
@@ -51,7 +51,7 @@ class HomeView extends GetView<HomeController> {
                       height: 70,
                       color: Colors.grey[300],
                       child: Image.network(
-                        user['photo'] != null && user['photo'] != ""
+                        user!['photo'] != null && user['photo'] != ""
                         ? user['photo']
                         : "https://ui-avatars.com/api/?name=${user['name']}",
                         fit: BoxFit.cover,
@@ -69,10 +69,17 @@ class HomeView extends GetView<HomeController> {
                           fontWeight: FontWeight.bold
                         ),
                       ),
-                      Text(
-                        user['position'] != null
-                        ? "${user['position']['lat']} - ${user['position']['long'] }"
-                        : "Belum ada lokasi",
+                      Container(
+                        width: 200,
+                        child: Text(
+                          user['position'] != null
+                          ? "${user['address']}"
+                          : "Belum ada lokasi",
+                          style: TextStyle(
+                            fontSize: 12
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
                     ],
                   ),
