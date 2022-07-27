@@ -61,7 +61,7 @@ class HomeView extends GetView<HomeController> {
                   SizedBox(width: 20,),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'Selamat datang!',
                         style: TextStyle(
@@ -69,7 +69,11 @@ class HomeView extends GetView<HomeController> {
                           fontWeight: FontWeight.bold
                         ),
                       ),
-                      Text('Lokasi belum terdeteksi')
+                      Text(
+                        user['position'] != null
+                        ? "${user['position']['lat']} - ${user['position']['long'] }"
+                        : "Belum ada lokasi",
+                      ),
                     ],
                   ),
                 ],

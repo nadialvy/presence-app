@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore firestore =FirebaseFirestore.instance;
 
   void changePage(i) async {
     print('click index=$i');
@@ -12,9 +18,15 @@ class PageIndexController extends GetxController {
     switch(i){
       case 1:
         print('ABSEN');
+        
+        // await Geolocator.openAppSettings();
+        // await Geolocator.openLocationSettings();
+        
         Map<String, dynamic> resp = await determinePosition();
         if(resp["error"] != true){
           Position position = resp["position"];
+
+          await updatePosition(position);
           Get.snackbar("${resp['message']}", "${position.latitude} - ${position.longitude}");
         }else {
           Get.snackbar("Terjadi Kesalahan", "${resp['message']}");
@@ -28,18 +40,26 @@ class PageIndexController extends GetxController {
     }
   }
 
+  Future<void> updatePosition(Position position) async{
+    String uid = await auth.currentUser!.uid;
+
+    await firestore.collection("pegawai").doc(uid).update({
+      "position" : {
+        "lat" : position.latitude,
+        'long' : position.longitude
+      }
+    });
+
+  }
+
   Future<Map<String, dynamic>> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the 
-      // App to enable the location services.
       return {
-        "message" : "Tidak dapat mengambil lokasi dari device ini",
+        "message" : "Aktifkan GPS anda",
         "error" : true,
       };
     }
@@ -48,11 +68,6 @@ class PageIndexController extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale 
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return {
           "message" : "Izin menggunakan GPS ditolak",
           "error" : true,
@@ -61,16 +76,13 @@ class PageIndexController extends GetxController {
     }
     
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately. 
       return {
         "message" : "Settingan hp kamu tidak memperbolehkan untuk mengakses GPS. Ubah pada setting",
         "error" : true,
       };
     } 
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    Position position = await Geolocator.getCurrentPosition();
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     return {
       "position" : position,
       "message" : "Berhasil mendapatkan posisi device",
