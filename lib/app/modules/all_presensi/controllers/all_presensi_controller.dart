@@ -37,7 +37,6 @@ class AllPresensiController extends GetxController {
         .orderBy("date", descending: true)
         .get();
     }
-
   }
 
   void pickDate(DateTime pickStart, DateTime pickEnd){
