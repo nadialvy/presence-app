@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -36,59 +37,97 @@ class AllPresensiView extends GetView<AllPresensiController> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: Material(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                    child: InkWell(
-                      onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI),
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+            child: StreamBuilder <QuerySnapshot<Map<String, dynamic>>>(
+              stream: controller.streamAllPresence(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if(snapshot.data!.docs.isEmpty){
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey[200],
+                      ),
+                      child: const Text(
+                        "Belum ada history presensi!",
+                        style: TextStyle(
+                          color: mainRed,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Masuk',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+                return ListView.builder(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> allPresence = snapshot.data!.docs[index].data();
+                    
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: Material(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                          child: InkWell(
+                            onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI, arguments: allPresence),
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Masuk',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      Text(
+                                        DateFormat.yMMMEd().format(DateTime.parse(allPresence['date'])),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                  '${DateFormat.yMMMEd().format(DateTime.now())}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                                  Text(
+                                    '${allPresence['masuk']?['date'] == null 
+                                    ? "-"
+                                    : DateFormat.jms().format(DateTime.parse(allPresence['masuk']['date'])) } '
                                   ),
-                                ),
-                              ],
-                            ),
-                            Text('${DateFormat.jms().format(DateTime.now())}'),
-                            SizedBox(height: 10,),
-                            Text(
-                              'Keluar',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
+                                  const SizedBox(height: 10,),
+                                  const Text(
+                                    'Keluar',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  Text(
+                                    '${allPresence['keluar']?['date'] == null 
+                                    ? "-"
+                                    : DateFormat.jms().format(DateTime.parse(allPresence['keluar']['date'])) } '
+                                  ),
+                                ],
                               ),
                             ),
-                            Text('${DateFormat.jms().format(DateTime.now())}'),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                      );
+                  },
                 );
-              },
+              }
             ),
           ),
         ],
