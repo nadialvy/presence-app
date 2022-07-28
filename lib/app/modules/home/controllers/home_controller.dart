@@ -19,7 +19,7 @@ class HomeController extends GetxController {
     //masuk ke curr user
     String uid = auth.currentUser!.uid;
 
-    yield* firestore.collection("pegawai").doc(uid).collection("presence").orderBy("date").limitToLast(5).snapshots();
+    yield* firestore.collection("pegawai").doc(uid).collection("presence").orderBy("date", descending: true).limitToLast(5).snapshots();
   }
 
 }

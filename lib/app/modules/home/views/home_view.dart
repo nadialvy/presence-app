@@ -187,7 +187,7 @@ class HomeView extends GetView<HomeController> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: snapPresence.data!.docs.length,
                     itemBuilder: (context, index) {
-                      Map<String, dynamic> last5Presence = snapPresence.data!.docs.reversed.toList()[index].data();
+                      Map<String, dynamic> last5Presence = snapPresence.data!.docs[index].data();
                     
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 15),
