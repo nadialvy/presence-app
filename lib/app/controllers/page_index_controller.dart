@@ -32,8 +32,12 @@ class PageIndexController extends GetxController {
           String address = "${placemarks[2].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}";
           await updatePosition(position, address);
 
+          //cek jarak antara 2 posisi
+          double distance = Geolocator.distanceBetween(-8.1244418, 111.8235724, position.latitude, position.longitude);
+          print(distance);
+
           //presensi
-          await presensi(position, address);
+          await presensi(position, address, distance);
 
         }else {
           Get.snackbar("Terjadi Kesalahan", "${resp['message']}");
@@ -47,7 +51,7 @@ class PageIndexController extends GetxController {
     }
   }
 
-  Future<void> presensi(Position position, String address) async{
+  Future<void> presensi(Position position, String address, double distance) async{
     String uid = auth.currentUser!.uid;
 
     CollectionReference<Map<String, dynamic>> colPresence = firestore.collection("pegawai").doc(uid).collection("presence");
@@ -56,7 +60,12 @@ class PageIndexController extends GetxController {
 
     DateTime now = DateTime.now();
     String todayDocID = DateFormat.yMd().format(now).replaceAll('/', '-');
-    // print(todayDocID);
+
+    String status = "Di Luar Area";
+    if(distance <= 200){
+      // didalam area
+      status = "Di Dalam Area";
+    }
 
     if(snapPresence.docs.isEmpty){
       // ABSEN MASUK PERTAMA KALI
@@ -67,7 +76,7 @@ class PageIndexController extends GetxController {
           "lat" : position.latitude,
           "long" : position.longitude,
           "address" : address,
-          "status" : "Di dalam area"
+          "status" : status
         }
       });
 
@@ -95,7 +104,7 @@ class PageIndexController extends GetxController {
               "lat" : position.latitude,
               "long" : position.longitude,
               "address" : address,
-              "status" : "Di dalam area"
+              "status" : status
             }
           });
 
@@ -113,7 +122,7 @@ class PageIndexController extends GetxController {
             "lat" : position.latitude,
             "long" : position.longitude,
             "address" : address,
-            "status" : "Di dalam area"
+            "status" :status
           }
         });
 
