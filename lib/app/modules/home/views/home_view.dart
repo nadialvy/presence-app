@@ -39,7 +39,6 @@ class HomeView extends GetView<HomeController> {
 
           Map<String, dynamic>? user = snapshot.data!.data();
           // print("${user!['name']}");
-
           return ListView(
             padding: const EdgeInsets.all(20),
             children: [
@@ -156,60 +155,99 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               SizedBox(height: 10,),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: Material(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                      child: InkWell(
-                        onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI),
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: controller.streamLast5Presence(),
+                builder: (context, snapPresence) {
+                  if(snapPresence.connectionState == ConnectionState.waiting){
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if(snapPresence.data!.docs.isEmpty){
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey[200],
+                      ),
+                      child: Text(
+                        "Belum ada history presensi!",
+                        style: TextStyle(
+                          color: mainRed,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+                  // print(snapPresence.data!.docs);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: snapPresence.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> last5Presence = snapPresence.data!.docs.reversed.toList()[index].data();
+                    
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: Material(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                          child: InkWell(
+                            onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI),
                             borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Masuk',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      Text(
+                                        '${DateFormat.yMMMEd().format(DateTime.parse(last5Presence['date']))}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   Text(
-                                    'Masuk',
+                                    '${last5Presence['masuk']?['date'] == null 
+                                    ? "-"
+                                    : DateFormat.jms().format(DateTime.parse(last5Presence['masuk']['date'])) } '
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Text(
+                                    'Keluar',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold
                                     ),
                                   ),
                                   Text(
-                                    '${DateFormat.yMMMEd().format(DateTime.now())}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                    ),
+                                    '${last5Presence['keluar']?['date'] == null 
+                                    ? "-"
+                                    : DateFormat.jms().format(DateTime.parse(last5Presence['keluar']['date'])) } '
                                   ),
                                 ],
                               ),
-                              Text('${DateFormat.jms().format(DateTime.now())}'),
-                              SizedBox(height: 10,),
-                              Text(
-                                'Keluar',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              Text('${DateFormat.jms().format(DateTime.now())}'),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
-                },
+                }
               )
             ],
           );
