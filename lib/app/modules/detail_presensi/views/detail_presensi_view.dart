@@ -7,19 +7,24 @@ import 'package:presence_app/app/constant/colors.dart';
 import '../controllers/detail_presensi_controller.dart';
 
 class DetailPresensiView extends GetView<DetailPresensiController> {
+  final Map<String, dynamic> last5Presence = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
+    print(last5Presence['masuk']);
+    print(last5Presence);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainRed,
-        title: Text('Detail Presensi'),
+        title: const Text('Detail Presensi'),
         centerTitle: true,
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(10),
@@ -29,46 +34,68 @@ class DetailPresensiView extends GetView<DetailPresensiController> {
               children: [
                 Center(
                   child: Text(
-                    DateFormat.yMMMMEEEEd().format(DateTime.now()),
-                    style: TextStyle(
+                    DateFormat.yMMMMEEEEd().format(DateTime.parse(last5Presence['date'])),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
-                Text(
+                const SizedBox(height: 20,),
+                const Text(
                   'Masuk',
                   style: TextStyle(
                     fontWeight: FontWeight.bold
                   ),
                 ),
                 Text(
-                  "Jam : ${DateFormat.jms().format(DateTime.now())}",
+                  "Jam : ${DateFormat.jms().format(DateTime.parse(last5Presence['masuk']!['date']))}",
                 ),
                 Text(
-                  "Posisi : -6,3562371 , 45.19138",
+                  "Posisi : ${last5Presence['masuk']['lat']} - ${last5Presence['masuk']!['long']}",
                 ),
                 Text(
-                  "Status : Didalam area",
+                  "Status : ${last5Presence['masuk']!['status']}",
                 ),
-                SizedBox(height: 20,),
                 Text(
+                  "Distance : ${last5Presence['masuk']!['distance'].toString().split('.').first} meter",
+                ),
+                Text(
+                  "Alamat : ${last5Presence['masuk']!['address']}",
+                ),
+                const SizedBox(height: 20,),
+                const Text(
                   'Keluar',
                   style: TextStyle(
                     fontWeight: FontWeight.bold
                   ),
                 ),
                 Text(
-                  "Jam : ${DateFormat.jms().format(DateTime.now())}",
+                  last5Presence['keluar'] == null
+                  ? "Jam : - "
+                  : "Jam : ${DateFormat.jms().format(DateTime.parse(last5Presence['keluar']!['date']))}",
                 ),
                 Text(
-                  "Posisi : -6,3562371 , 45.19138",
+                  last5Presence['keluar'] == null
+                  ? "Posisi : -"
+                  : "Posisi :${last5Presence['masuk']['lat']} - ${last5Presence['masuk']!['long']}",
                 ),
                 Text(
-                  "Status : Didalam area",
+                  last5Presence['keluar'] == null
+                  ? "Status : - "
+                  : "Status : ${last5Presence['masuk']!['status']}",
                 ),
-                SizedBox(height: 20,),
+                Text(
+                  last5Presence['keluar'] == null
+                  ? "Distance : - "
+                  : "Distance : ${last5Presence['masuk']!['distance'].toString().split('.').first} meter",
+                ),
+                Text(
+                  last5Presence['keluar'] == null
+                  ? "Address : - "
+                  : "Address : ${last5Presence['masuk']!['address']}",
+                ),
+                const SizedBox(height: 20,),
                 
               ],
             ),

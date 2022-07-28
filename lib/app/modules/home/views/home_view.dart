@@ -132,7 +132,7 @@ class HomeView extends GetView<HomeController> {
                             Text(
                               todayPresence?['masuk'] == null 
                               ? '-'
-                              : "${DateFormat.jms().format(DateTime.parse(todayPresence?['masuk']['date']))}"
+                              : DateFormat.jms().format(DateTime.parse(todayPresence?['masuk']['date']))
                             ),
                           ]
                         ),
@@ -147,7 +147,7 @@ class HomeView extends GetView<HomeController> {
                             Text(
                               todayPresence?['keluar'] == null 
                               ? '-'
-                              : "${DateFormat.jms().format(DateTime.parse(todayPresence?['keluar']['date']))}"
+                              : DateFormat.jms().format(DateTime.parse(todayPresence?['keluar']['date']))
                             ),
                           ]
                         ),
@@ -214,7 +214,7 @@ class HomeView extends GetView<HomeController> {
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
-                            onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI),
+                            onTap: () => Get.toNamed(Routes.DETAIL_PRESENSI, arguments: last5Presence),
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
                               padding: const EdgeInsets.all(20),
