@@ -114,27 +114,46 @@ class HomeView extends GetView<HomeController> {
                   borderRadius: BorderRadius.circular(15),
                   color: Colors.grey[200],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
+                child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>> (
+                  stream: controller.streamTodayPresence(),
+                  builder: (context, snapshotToday) {
+                    if(snapshotToday.connectionState == ConnectionState.waiting){
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    Map<String, dynamic>? todayPresence = snapshotToday.data?.data();
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text('Masuk'),
-                        Text('-'),
-                      ]
-                    ),
-                    Container(
-                      width: 2,
-                      height: 40,
-                      color: darkGrey,
-                    ),
-                    Column(
-                      children: [
-                        Text('Keluar'),
-                        Text('-'),
-                      ]
-                    ),
-                  ],
+                        Column(
+                          children: [
+                            Text('Masuk'),
+                            Text(
+                              todayPresence?['masuk'] == null 
+                              ? '-'
+                              : "${DateFormat.jms().format(DateTime.parse(todayPresence?['masuk']['date']))}"
+                            ),
+                          ]
+                        ),
+                        Container(
+                          width: 2,
+                          height: 40,
+                          color: darkGrey,
+                        ),
+                        Column(
+                          children: [
+                            Text('Keluar'),
+                            Text(
+                              todayPresence?['keluar'] == null 
+                              ? '-'
+                              : "${DateFormat.jms().format(DateTime.parse(todayPresence?['keluar']['date']))}"
+                            ),
+                          ]
+                        ),
+                      ],
+                    );
+                  }
                 ),
               ),
               SizedBox(height: 20,),
